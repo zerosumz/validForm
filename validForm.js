@@ -14,20 +14,20 @@ String.prototype.와과 = addHangulSuffix('와','과');
 
 function Dialog(icon){
 	var dialogTemplate = 
-	'    <div class="modal" style="z-index:99999">'+
-	'		<div class="modal_header">'+
+	'<div>'+
+	'    <div style="z-index:99999; display: none">'+
+	'		<div style="font-size: 30px; ">'+
 				icon+
 	'		</div>'+
-	'		<div class="modal_body" style="height: 75px;">'+
-	'			<p class="modal_msg"  style="height: 90px; margin-top: 10px;">'+
+	'		<div>'+
+	'			<p class="modal_msg"  style="margin-top: 10px; margin-bottom: 10px">'+
 	'			</p>'+
-	'			<div class="btn_box">'+
-	'				<a id="dismiss" href="#;" class="btn">'+
+	'				<a id="dismiss" href="#;" class="btn btn-lg btn-danger" style="margin-bottom:10px">'+
 	'					확인'+
 	'				</a>'+
-	'			</div>'+
 	'		</div>'+
-	'	</div>';
+	'	</div>'+
+	'</div>';
 	var $dialog = $($(dialogTemplate).html());
 	var $dismiss = $dialog.find('#dismiss');
 	
@@ -60,11 +60,15 @@ function Dialog(icon){
 					message : this.dialog ,
 					css:{
 						width:		'322px',
-						height:     '200px',
+						
+						border: 		  0,
+						'border-radius': '20px',
+						'-webkit-box-shadow': '0px 2px 10px 0px rgba(50, 50, 50, 0.75)',
+						'-moz-box-shadow':    '0px 2px 10px 0px rgba(50, 50, 50, 0.75)',
+						'box-shadow':         '0px 2px 10px 0px rgba(50, 50, 50, 0.75)',
 						top:		(document.body.clientHeight / 2) - 200 ,
 						left:		(document.body.clientWidth / 2) - 161
-					},
-					effect : {name : 'bounce', option : {distance: 10, times: 2 }}
+					}
 				}); 
 		}
 	} 
