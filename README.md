@@ -48,14 +48,17 @@ validForm
     * 혹은 두 가지를 섞어 쓸 수 있다.
 
 
-* 예제
-````html 정규식,메세지짝 예제
+* 정규식 예제
+
+````html
 <input type="text" data-valid="[[  /^.+$/  ,    '값을 입력해주세요'          ],
                                 [  /\d/    ,    '숫자가 하나정돈 필요합니다.'],
                                 [  /^.{6}$/,    '6자리로 입력해주시겠어요?'  ]]">
 ````
 
-````javascript 함수예제
+* 함수예제 
+
+````javascript
 function PASSWORD_CONFIRM(){
 	if($('input[name="user.passwd"]').val() != $(this).val())
 	    throw '<strong>비밀번호/비밀번호확인</strong>이 동일하지 않습니다.';
