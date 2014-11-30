@@ -40,6 +40,7 @@ validForm
         * e.exceptionMessage 가 에러메세지
         * e.input 이 말썽을 일으킨 `:input`
     * validFormNow : validForm 의 즉시실행 버전.
+        * 검증의 성공/실패 를 `boolean` 타입으로 반환
 
 * data-valid 작성
     * 여러 정규식,에러메세지 짝의 배열
