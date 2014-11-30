@@ -6,7 +6,7 @@ function addHangulSuffix(whenLastSyllableExist, whenLastSyllableNotExist ){
 	}
 }
 
-String.prototype.을를 = addHangulSuffix('를','을');
+String.prototype.을를 = addHangulSuffix('을','를');
 String.prototype.이가 = addHangulSuffix('이','가');
 String.prototype.은는 = addHangulSuffix('은','는');
 String.prototype.와과 = addHangulSuffix('와','과');
