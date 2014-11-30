@@ -11,74 +11,8 @@ String.prototype.이가 = addHangulSuffix('이','가');
 String.prototype.은는 = addHangulSuffix('은','는');
 String.prototype.와과 = addHangulSuffix('와','과');
 
-
-function Dialog(icon){
-	var dialogTemplate = 
-	'<div>'+
-	'    <div style="z-index:99999; display: none">'+
-	'		<div style="font-size: 30px; ">'+
-				icon+
-	'		</div>'+
-	'		<div>'+
-	'			<p class="modal_msg"  style="margin-top: 10px; margin-bottom: 10px">'+
-	'			</p>'+
-	'				<a id="dismiss" href="#;" class="btn btn-lg btn-danger" style="margin-bottom:10px">'+
-	'					확인'+
-	'				</a>'+
-	'		</div>'+
-	'	</div>'+
-	'</div>';
-	var $dialog = $($(dialogTemplate).html());
-	var $dismiss = $dialog.find('#dismiss');
-	
-	$(document.body).append($dialog);
-
-	return {
-		dialog: $dialog,
-		alert: function(message, callback){
-			this.dialog.find('p.modal_msg').html(message);
-			
-			$dismiss.click(function(){
-				$('div#big_block').unblock({
-						fadeOut:150, 
-						onUnblock: function(){
-							$('div#big_block').remove();
-							$(this).find('p.modal_msg').empty();
-							$(this).find('p.modal_msg_detail').empty();
-							if(_.isFunction(callback))
-								callback();
-						}
-				});
-			});
-			
-			$('<div id="big_block" style="position:fixed;width:100%;height:100%;top:0px;left:0px;z-index:99999" />')
-				.appendTo(document.body)
-			    .block({	
-					baseZ: 99999,
-					fadeIn: 500,
-					opacity: 0.2,
-					message : this.dialog ,
-					css:{
-						width:		'322px',
-						
-						border: 		  0,
-						'border-radius': '20px',
-						'-webkit-box-shadow': '0px 2px 10px 0px rgba(50, 50, 50, 0.75)',
-						'-moz-box-shadow':    '0px 2px 10px 0px rgba(50, 50, 50, 0.75)',
-						'box-shadow':         '0px 2px 10px 0px rgba(50, 50, 50, 0.75)',
-						top:		(document.body.clientHeight / 2) - 200 ,
-						left:		(document.body.clientWidth / 2) - 161
-					}
-				}); 
-		}
-	} 
-}
-
-var dialog = new Dialog('<span class="glyphicon glyphicon-warning-sign" style="	color: #B33A3A;"></span>');
-var goodDialog = new Dialog('<span class="glyphicon glyphicon-ok" style="color: #5CB85C;"></span>');
-
 /**
- * 커스텀 다이얼로그 박스를 위한 벨리데이션 플러그인
+ * 폼 검증을 위한 벨리데이션 플러그인
  *
  * usage
  * <pre>
@@ -88,7 +22,7 @@ var goodDialog = new Dialog('<span class="glyphicon glyphicon-ok" style="color: 
  * @author 장유현
  *
  * @param tests
- *            함수 혹은 에러메세지와 짝을 이루는 함수 혹은 정규식 배열
+ *            함수 혹은 정규식,에러메세지 짝의 배열
  * @returns void
  *
  */
@@ -133,8 +67,11 @@ $.fn.extend({
 
 						if(_.isFunction(handler)){
 							handler(e);
+						} else if(!!$.validDialog){
+							$.validDialog.alert(e.exceptionMessage, function(){$(el).focus();});
 						} else {
-							dialog.alert(e.exceptionMessage, function(){$(el).focus();});
+							alert(e.exceptionMessage);
+							$(el).focus();
 						}
 						return false;
 					}
@@ -153,10 +90,11 @@ $.fn.extend({
 				} catch (e) {
 					if(_.isFunction(handler)){
 						handler(e);
+					} else if(!!$.validDialog){
+						$.validDialog.alert(e.exceptionMessage, function(){$(el).focus();});
 					} else {
-						dialog.alert(e.exceptionMessage , function(){
-							$(el).focus();
-						});
+						alert(e.exceptionMessage);
+						$(el).focus();
 					}
 					result = false;
 					return false;
@@ -197,14 +135,6 @@ function CHECK_EXTERNAL(checkValue, targetName){
 	return function (){
 		if(!checkValue)
 			throw '<strong>' + targetName + '</strong>'+ targetName.을를() + " 체크해주세요";
-	}
-}
-
-function HIDDEN_INPUT(targetName){
-	return function(){
-		var $this = $(this);
-		if($this.is(':visible') && _.isEmpty($this.val()))
-			throw '<strong>'+targetName+'</strong>'+ targetName.을를() + ' 입력하여 주세요.';	
 	}
 }
 
