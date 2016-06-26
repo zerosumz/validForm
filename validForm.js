@@ -65,6 +65,8 @@ $.fn.extend({
 
 						submitEvent.returnValue = false;
 
+						$(':input').blur();
+
 						if(_.isFunction(handler)){
 							handler(e);
 						} else if(!!$.validDialog){
