@@ -55,22 +55,26 @@ $.validDialog = function () {
 
         var $blockDiv = $('<div id="big_block" style="display: none; position:absolute;top:0;left:0;right:0;bottom:0;z-index:99999; background-color: black; opacity: .3" />');
         var $dismiss = $dialog.find('#dismiss');
-
+        var afterDismiss = function(){};
 
         var self = {
-            animateInSequence: function ($els, css) {
+            animateInSequence: function ($els, css, cb) {
                 $els.each(function (idx, el) {
                     $(el)
                         .removeClass('slideOutUp flipOutX animated')
                         .animationCont(function () {
                             $(el).removeClass(css).css('animation-delay', 0);
+                            if(_.isFunction(cb)){
+                                cb();
+                            }
                         })
                         .css('animation-delay', (idx * 0.1).toString() + 's')
                         .addClass(css)
                         .show();
+
                 });
             },
-            animateOutSequence: function ($els, css) {
+            animateOutSequence: function ($els, css, cb) {
                 $els.each(function (idx, el) {
                     $(el)
                         .removeClass('flipInX slideInDown animated')
@@ -78,6 +82,9 @@ $.validDialog = function () {
                             $(el).hide()
                                 .removeClass(css)
                                 .css('animation-delay', 0);
+                            if(_.isFunction(cb)){
+                                cb();
+                            }
                         })
                         .css('animation-delay', (idx * 0.1).toString() + 's')
                         .addClass(css);
@@ -96,11 +103,13 @@ $.validDialog = function () {
 
             dialog: $dialog,
             alert: function (message, callback) {
+
+                afterDismiss = callback;
                 $blockDiv.fadeIn();
                 self.dialog.find('h4.modal-msg').html(message);
                 self.positioning();
                 self.animateInSequence($dialog, 'flipInX animated');
-                self.animateInSequence($dialogContents, 'slideInDown animated');
+                self.animateInSequence($dialogContents, 'slideInDown animated', function(){$dismiss.focus()});
             }
         };
 
@@ -108,6 +117,7 @@ $.validDialog = function () {
             self.animateOutSequence($dialogContents, 'slideOutUp animated');
             self.animateOutSequence($dialog, 'flipOutX animated');
             $blockDiv.fadeOut();
+            afterDismiss();
         });
 
         $blockDiv.appendTo(document.body);

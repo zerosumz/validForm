@@ -68,9 +68,7 @@ $.fn.extend({
 						$(':input').blur();
 
 						if(_.isFunction(handler)){
-							handler(e);
-						} else if(!!$.validDialog){
-							$.validDialog.alert(e.exceptionMessage, function(){$(el).focus();});
+							handler(e.exceptionMessage, function(){$(el).focus();});
 						} else {
 							alert(e.exceptionMessage);
 							$(el).focus();

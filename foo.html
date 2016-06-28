@@ -37,7 +37,8 @@
     $('form').validForm();
     var $a = $.validDialog();
     $('button#pop').click(function(){
-        $a.alert('POP!!');
+        var $this = $(this);
+        $a.alert('POP!!', function(){$this.focus()});
     })
 </script>
 
