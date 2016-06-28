@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
+          integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+    <style type="text/css">
+
+        div#pop h3,div#pop button{
+            color: white;
+            -webkit-animation-duration:0.6s;
+            -moz-animation-duration:0.6s;
+            -ms-animation-duration:0.6s;
+            -o-animation-duration:0.6s;
+            animation-duration:0.6s;
+
+        }
+    </style>
+
+</head>
+<body class="app" style="">
+<button id="pop" class="btn btn-info">POP!</button>
+<script src="https://code.jquery.com/jquery-2.2.4.min.js"
+        integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
+        crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
+        integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+
+<script src="validForm.js"></script>
+<script src="validForm-dialog.js"></script>
+<script type="text/javascript">
+    $('form').validForm();
+    var $a = $.validDialog();
+    $('button#pop').click(function(){
+        $a.alert('POP!!');
+    })
+</script>
+
+</body>
+</html>

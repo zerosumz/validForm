@@ -1,69 +1,121 @@
+$.fn.extend({
+    animationCont: function (cb) {
+        this.unbind('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', cb);
+        return this;
+    }
+});
+
 /**
  *  formValid를 위한 기본 알림 다이얼로그
  *  부트스트랩 버튼 테마를 사용.
- *  
+ *
  */
-function Dialog(icon){
-	var dialogTemplate = 
-	'<div>'+
-	'    <div style="z-index:99999; display: none">'+
-	'		<div style="font-size: 30px; ">'+
-				icon+
-	'		</div>'+
-	'		<div>'+
-	'			<p class="modal_msg"  style="margin-top: 10px; margin-bottom: 10px">'+
-	'			</p>'+
-	'				<a id="dismiss" href="#;" class="btn btn-lg btn-danger" style="margin-bottom:10px">'+
-	'					확인'+
-	'				</a>'+
-	'		</div>'+
-	'	</div>'+
-	'</div>';
-	var $dialog = $($(dialogTemplate).html());
-	var $dismiss = $dialog.find('#dismiss');
-	
-	$(document.body).append($dialog);
+$.validDialog = function () {
+    return (function () {
+        var $dialog =
+            $(
+                '<div>' +
+                '    <h3 style="display: none"><span class="glyphicon glyphicon-comment">Oops!!</h3>' +
+                '    <h4 class="modal-msg" style="display: none"></h4>' +
+                '    <button id="dismiss" type="button" class="btn btn-lg btn-info" style="display:none"><span class="ion-beer"> 나한테 술사주기</button>' +
+                '</div>'
+            );
 
-	return {
-		dialog: $dialog,
-		alert: function(message, callback){
-			this.dialog.find('p.modal_msg').html(message);
-			
-			$dismiss.click(function(){
-				$('div#big_block').unblock({
-						fadeOut:150, 
-						onUnblock: function(){
-							$('div#big_block').remove();
-							$(this).find('p.modal_msg').empty();
-							$(this).find('p.modal_msg_detail').empty();
-							if(_.isFunction(callback))
-								callback();
-						}
-				});
-			});
-			
-			$('<div id="big_block" style="position:fixed;width:100%;height:100%;top:0px;left:0px;z-index:99999" />')
-				.appendTo(document.body)
-			    .block({	
-					baseZ: 99999,
-					fadeIn: 500,
-					opacity: 0.2,
-					message : this.dialog ,
-					css:{
-						width:		'322px',
-						
-						border: 		  0,
-						'border-radius': '20px',
-//						'-webkit-box-shadow': '0px 2px 10px 0px rgba(50, 50, 50, 0.75)',
-//						'-moz-box-shadow':    '0px 2px 10px 0px rgba(50, 50, 50, 0.75)',
-//						'box-shadow':         '0px 2px 10px 0px rgba(50, 50, 50, 0.75)',
-						top:		(document.body.clientHeight / 2) - 200 ,
-						left:		(document.body.clientWidth / 2) - 161
-					},
-					effect : {name : 'bounce', option : {distance: 10, times: 2 }}
-				}); 
-		}
-	} 
-}
 
-$.validDialog = new Dialog('<span class="glyphicon glyphicon-warning-sign" style="	color: #B33A3A;"></span>');
+        $dialog.css({
+            'position': 'fixed',
+            'z-index': 100000,
+            'width': '350px',
+            'text-align': 'center',
+            'display': 'none',
+            'border-radius': '10px',
+            'padding': '10px',
+            'background-color': '#0072c6',
+            'margin': 'auto',
+            '-webkit-animation-duration': '0.4s',
+            '-moz-animation-duration': '0.4s',
+            '-ms-animation-duration': '0.4s',
+            '-o-animation-duration': '0.4s',
+            'animation-duration': '0.4s'
+        });
+
+
+
+        $dialog.find('h3 , h4').css({
+            'color': 'white',
+            '-webkit-animation-duration': '0.6s',
+            '-moz-animation-duration': '0.6s',
+            '-ms-animation-duration': '0.6s',
+            '-o-animation-duration': '0.6s',
+            'animation-duration': '0.6s'
+        });
+
+
+        var $dialogContents = $dialog.find('h3, h4, button#dismiss');
+
+        var $blockDiv = $('<div id="big_block" style="display: none; position:absolute;top:0;left:0;right:0;bottom:0;z-index:99999; background-color: black; opacity: .3" />');
+        var $dismiss = $dialog.find('#dismiss');
+
+
+        var self = {
+            animateInSequence: function ($els, css) {
+                $els.each(function (idx, el) {
+                    $(el)
+                        .removeClass('slideOutUp flipOutX animated')
+                        .animationCont(function () {
+                            $(el).removeClass(css).css('animation-delay', 0);
+                        })
+                        .css('animation-delay', (idx * 0.1).toString() + 's')
+                        .addClass(css)
+                        .show();
+                });
+            },
+            animateOutSequence: function ($els, css) {
+                $els.each(function (idx, el) {
+                    $(el)
+                        .removeClass('flipInX slideInDown animated')
+                        .animationCont(function () {
+                            $(el).hide()
+                                .removeClass(css)
+                                .css('animation-delay', 0);
+                        })
+                        .css('animation-delay', (idx * 0.1).toString() + 's')
+                        .addClass(css);
+                });
+            },
+
+            positioning: function(){
+                var left =  parseInt(window.innerWidth / 2) - parseInt($dialog.width() / 2);
+                var top =  parseInt(window.innerHeight / 2) - parseInt($dialog.height() / 2);
+
+                $dialog.css({
+                    'left': left,
+                    'top' : top
+                });
+            },
+
+            dialog: $dialog,
+            alert: function (message, callback) {
+                $blockDiv.fadeIn();
+                self.dialog.find('h4.modal-msg').html(message);
+                self.positioning();
+                self.animateInSequence($dialog, 'flipInX animated');
+                self.animateInSequence($dialogContents, 'slideInDown animated');
+            }
+        };
+
+        $dismiss.click(function () {
+            self.animateOutSequence($dialogContents, 'slideOutUp animated');
+            self.animateOutSequence($dialog, 'flipOutX animated');
+            $blockDiv.fadeOut();
+        });
+
+        $blockDiv.appendTo(document.body);
+        $dialog.appendTo(document.body);
+
+        $(window).resize(self.positioning);
+
+        return self;
+    })();
+};
+
